@@ -21,4 +21,8 @@ kubectl apply -f "$K8S_DIR/configmap.yaml"
 sed "s|travel-time-collector:latest|${ECR_URI}:latest|g" "$K8S_DIR/deployment.yaml" | kubectl apply -f -
 sed "s|travel-time-collector:latest|${ECR_URI}:latest|g" "$K8S_DIR/cronjob.yaml" | kubectl apply -f -
 
+# deployment 스펙이 바뀌지 않아도(:latest 동일) 새 이미지로 Pod 재기동
+kubectl rollout restart deployment/travel-time-collector -n travel-time
+kubectl rollout status deployment/travel-time-collector -n travel-time --timeout=120s
+
 echo "Deployed. Secret이 없으면 생성: kubectl create secret generic travel-time-collector-secret -n travel-time --from-literal=KAKAO_REST_API_KEY=... --from-literal=ODSAY_API_KEY=..."
