@@ -1,0 +1,14 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: jacky-agent-cluster
+  region: ap-northeast-2
+  version: "1.29"
+
+managedNodeGroups:
+  - name: ng-general
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3

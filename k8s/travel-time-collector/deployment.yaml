@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: travel-time-collector
+  namespace: travel-time
+  labels:
+    app: travel-time-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: travel-time-collector
+  template:
+    metadata:
+      labels:
+        app: travel-time-collector
+      annotations:
+        # Datadog 로그 수집: stdout/stderr 수집
+        ad.datadoghq.com/travel-time-collector.logs: '[{"source": "travel-time-collector", "service": "travel-time-collector"}]'
+    spec:
+      containers:
+        - name: collector
+          # ECR 사용. apply 시 scripts/deploy-ecr.sh 또는 sed로 치환
+          image: travel-time-collector:latest
+          imagePullPolicy: IfNotPresent
+          # 매 시간 정각(KST)에 run_once 실행. -u: 무버퍼 출력
+          command: ["python", "-u", "run_hourly.py"]
+          envFrom:
+            - secretRef:
+                name: travel-time-collector-secret
+            - configMapRef:
+                name: travel-time-collector-config
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+      restartPolicy: Always

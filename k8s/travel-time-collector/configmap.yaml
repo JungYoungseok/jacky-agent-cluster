@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: travel-time-collector-config
+  namespace: travel-time
+  labels:
+    app: travel-time-collector
+data:
+  # 선택: 출발지~첫 역 도보 보정(분). 빗썸금융타워~강남역 9분
+  ODSAY_FIRST_WALK_MIN: "9"

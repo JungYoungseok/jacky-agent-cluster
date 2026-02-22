@@ -1,0 +1,23 @@
+# env / secrets
+.env
+*.env.local
+k8s/**/secret.yaml
+eks_resources/datadog-agent.yaml
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# logs
+*.log

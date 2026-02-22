@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: travel-time-collector
+  namespace: travel-time
+  labels:
+    app: travel-time-collector
+spec:
+  # 한국 시간(KST) 월~금 09:00~18:00, 매 :20·:40에만 실행 (데이터 보충)
+  schedule: "20,40 9-18 * * 1-5"
+  timeZone: "Asia/Seoul"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: travel-time-collector
+            job-type: cron
+          annotations:
+            ad.datadoghq.com/travel-time-collector.logs: '[{"source": "travel-time-collector", "service": "travel-time-collector"}]'
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: collector
+              # ECR 사용. apply 시 scripts/deploy-ecr.sh 또는 sed로 치환
+              image: travel-time-collector:latest
+              imagePullPolicy: IfNotPresent
+              command: ["python", "run_once.py"]
+              envFrom:
+                - secretRef:
+                    name: travel-time-collector-secret
+                - configMapRef:
+                    name: travel-time-collector-config
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "50m"
+                limits:
+                  memory: "128Mi"
+                  cpu: "200m"
