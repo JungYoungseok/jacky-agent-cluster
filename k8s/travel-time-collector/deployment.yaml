@@ -22,7 +22,7 @@ spec:
         - name: collector
           # ECR 사용. apply 시 scripts/deploy-ecr.sh 또는 sed로 치환
           image: travel-time-collector:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           # 매 시간 정각(KST)에 run_once 실행. -u: 무버퍼 출력
           command: ["python", "-u", "run_hourly.py"]
           envFrom:

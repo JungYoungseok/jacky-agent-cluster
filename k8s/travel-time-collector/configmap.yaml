@@ -7,4 +7,6 @@ metadata:
     app: travel-time-collector
 data:
   # 선택: 출발지~첫 역 도보 보정(분). 빗썸금융타워~강남역 9분
-  ODSAY_FIRST_WALK_MIN: "9"
+  ODSAY_FIRST_WALK_MIN: "10"
+  # 새 컨테이너 기동 시 정각 대기 없이 1회 즉시 수집 후, 이후부터 매 시 정각 실행
+  RUN_FIRST_IMMEDIATELY: "1"

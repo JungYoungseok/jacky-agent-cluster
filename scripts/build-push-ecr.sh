@@ -19,9 +19,9 @@ aws ecr get-login-password --region "$AWS_REGION" | \
 # 레포 없으면 생성
 aws ecr create-repository --repository-name "$REPO_NAME" --region "$AWS_REGION" 2>/dev/null || true
 
-# 빌드 및 푸시
+# 빌드 및 푸시 (EKS 노드는 보통 amd64 → M1/M2 등에서 빌드 시 플랫폼 지정)
 cd "$ROOT_DIR/travel-time-collector"
-docker build -t "$REPO_NAME:latest" .
+docker build --platform linux/amd64 -t "$REPO_NAME:latest" .
 docker tag "$REPO_NAME:latest" "$ECR_URI:latest"
 docker push "$ECR_URI:latest"
 

@@ -27,7 +27,7 @@ spec:
             - name: collector
               # ECR 사용. apply 시 scripts/deploy-ecr.sh 또는 sed로 치환
               image: travel-time-collector:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               command: ["python", "run_once.py"]
               envFrom:
                 - secretRef:
